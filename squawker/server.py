@@ -47,24 +47,35 @@ def root():
         key = request.form.get("className")
         member = (["Swimming","Ballet","Climbing"])
         member.append(key)
+        print(member)
         common = []
         wholeClass = []
         names = ""
+        wholeName = []
         c.execute("SELECT class FROM posts")
         eachclass = list(c.fetchall())
-        print len(eachclass)
+        print(eachclass)
         for i in range(len(eachclass)):
             each = ''.join(eachclass[i])
+            print(each)
             classEach = [x.strip() for x in each.split(',')]
+            print(classEach)
             wholeClass.append(classEach)
+        print(wholeClass)
         for i in range(len(wholeClass)):
             a = np.intersect1d(member,wholeClass[i])
+            print(a)
             common.append(len(a))
         commonC = np.array(common)
+        print(commonC)
         sort = commonC.argsort()[-3:][::-1]
-        c.execute("SELECT name FROM posts WHERE id=?",[sort[0]])          
-        names = c.fetchall()
-        return render_template("result.html",content = names )
+        print(sort)
+        a=2
+        for i in range(len(sort)):
+            c.execute("SELECT name FROM posts WHERE id=?",(int(sort[i])+1,))          
+            names = c.fetchall()
+            wholeName.append(names)
+        return render_template("result.html", content = wholeName )
     else:
         return render_template("home.html")
 if __name__ == '__main__':
